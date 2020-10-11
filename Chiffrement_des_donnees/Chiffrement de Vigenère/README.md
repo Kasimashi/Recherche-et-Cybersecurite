@@ -1,4 +1,4 @@
-#Le chiffrement de Vigenère
+# Le chiffrement de Vigenère
 On associe à chaque lettre une autre lettre (sans ordre fixe ou règle générale).
 Par exemple :
 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
@@ -9,7 +9,7 @@ ETRE OU NE PAS ETRE TELLE EST LA QUESTION
 devient :
 XGKX DR SX OFV XGKX GXWWX XVG WF ZRXVGPDS
 
-#Méthode d'attaque:
+## Méthode d'attaque:
 Mathématiquement, le choix d’une clé revient au choix d’une bijection de l’ensemble : A, B, . . . , Z vers le même ensemble A, B, . . . , Z
 	
 Il y a 26! choix possibles. En effet pour la lettre A de l’ensemble de départ, il y a 26 choix possibles (nous avions choisi F), pour B il reste 25 choix possibles (tout sauf F qui est déjà choisi), pour C il reste 24 choix... enfin pour Z il ne reste qu’une seule possibilité, la seule lettre non encore choisie. Au final il y a : 26 × 25 × 24 × ··· × 2 × 1 soit 26! choix de clés. Ce qui fait environ 4 × 1026 clés. Il y a plus de clés différentes que de grains de sable sur Terre ! Si un ordinateur pouvait tester 1 milliard de clés par seconde, il lui faudrait alors 12 milliards d’années pour tout énumérer.
