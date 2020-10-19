@@ -7,3 +7,6 @@
 [submodule "SDR/Modulations/OFDM-FBMC/gr-fbmc"]
 	path = SDR/Modulations/OFDM-FBMC/gr-fbmc
 	url = git@github.com:maxpenner/gr-fbmc.git
+[submodule "Automobile/Logiciels/ICSim"]
+	path = Automobile/Logiciels/ICSim
+	url = git@github.com:zombieCraig/ICSim.git
