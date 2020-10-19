@@ -1,0 +1,9 @@
+[submodule "Automobile/Logiciels/socketcand"]
+	path = Automobile/Logiciels/socketcand
+	url = git@github.com:linux-can/socketcand.git
+[submodule "SDR/Logiciels/gnuradio"]
+	path = SDR/Logiciels/gnuradio
+	url = git@github.com:gnuradio/gnuradio.git
+[submodule "SDR/Modulations/OFDM-FBMC/gr-fbmc"]
+	path = SDR/Modulations/OFDM-FBMC/gr-fbmc
+	url = git@github.com:maxpenner/gr-fbmc.git

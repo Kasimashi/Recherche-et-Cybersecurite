@@ -1,0 +1,2 @@
+SampleRateEmit : > 2MHz
+Ch0Freq : 152e5HZ = 152MHz
