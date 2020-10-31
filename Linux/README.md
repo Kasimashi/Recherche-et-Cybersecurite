@@ -123,6 +123,18 @@ Il est possible d'envoyer des programmes en arrière-plan dans la console afin d
 
 - screen est un programme puissant que vous pouvez installer avec apt-get(il n'est pas présent par défaut). Il permet d'ouvrir plusieurs consoles virtuelles au sein d'une seule et même console, et donc d'exécuter facilement plusieurs processus en parallèle.
 
+## Scheduleur
+
+- date permet d'obtenir la date et l'heure mais aussi de modifier celles-ci.
+
+- at retarde l'exécution d'une commande à une heure ultérieure.
+
+On peut exécuter plusieurs commandes d'affilée en les séparant par des points-virgules :touch fichier.txt; rm fichier.txt.
+
+- sleep permet de faire une pause entre deux commandes exécutées d'affilée.
+
+- crontab permet de programmer des commandes pour une exécution régulière. Par exemple : tous les jours à 18 h 30, tous les lundis et mardis à 12 h, tous les 5 du mois, etc. On modifie la programmation avec crontab -e.
+
 ## Tricks Linux
 
 Utiliser un nano intelligent (souris et indentation automatique) : nano -miA source.txt
