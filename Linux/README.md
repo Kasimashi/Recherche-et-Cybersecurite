@@ -144,9 +144,17 @@ Mettreleclavierenfr : setxkbmap fr
 CAT : (mettre des | entre)
 
 cut -d " " -f 1 // Récupérer le premier champs du fichier séparé par " "
+
+
 sort | uniq -c //Compter le nombre d'occurence.
 sort //Trier
+sort -u // Trier et enlever les doublons
+
+afficher le premier élément d'une recherche (séparé par ":")
+awk -F: '{print $1}'
+
 grep ... //pour récupérer les lignes avec ceci.
+grep -oP '".*?"' //Rechercher tout les mots entre guillements
 grep ... | grep ... //Pour faire avec 2 recherches.
 uniq //Pour afficher qu'une seule occurence.
 
@@ -155,7 +163,8 @@ python -m SimpleHTTPServer <PORT>
 Installer sa carte graphique sur sa VM :
 sudo apt install -y nvidia-driver nvidia-cuda-toolkit
 
-
+Exemples : Recherche le mot categories et les scripts nse correspondant dans le repertoire : /usr/share/nmap/scripts/
+grep -r categories /usr/share/nmap/scripts/*.nse
 
 Enumération dyn. du rep. Desktop : watch -n 2 ls /home/kasi/Desktop/
 
