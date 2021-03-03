@@ -1,5 +1,7 @@
 # Informations utiles sur Linux 
 
+Références : https://tldp.org/LDP/lkmpg/2.6/lkmpg.pdf
+
 ## Arborescence
 
 - bin : contient des programmes (exécutables) susceptibles d'être utilisés par tous les utilisateurs de la machine.
