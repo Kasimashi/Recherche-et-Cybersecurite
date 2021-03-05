@@ -1,44 +1,180 @@
-# Informations utiles sur Linux 
+# GNU/Linux ou "Linux"
 
-Références : https://tldp.org/LDP/lkmpg/2.6/lkmpg.pdf
+## Introduction
+
+Il convient ici de différencier distribution, système d'exploitation et noyaux lorsqu'on parle de :
+Debian GNU/Linux : 
+- Debian est la distribution liée à GNU/Linux.
+- GNU/Linux est un système d'exploitation qui peut être utilisé avec des logiciels libres.
+- GNU est un outil pour interargir avec le noyau. Ce sont tout les outils pour rendre un PC utilisable.
+- Linux c'est le noyau du système.
+
+L'arborescence linux peut parfois être difficile à appréhender mais elle est finalement simple après l'avoir adopté.
+
+## Le Noyau Linux
+
+### Le rôle du noyau
+Le noyau sert d'abord à contrôler les différents composants matériels, les recenser, les mettre en marche lors de l'initialisation de l'ordinateur, etc.
+
+Le Noyau permet en partie de faire le lien entre le matériel et la machine par l'intermédiaire de drivers.
+
+### Compilation du noyau
+
+Dans la mesure où le code source du noyau Linux contient une très grande quantité de fonctionnalités, l'utilisateur peut choisir de n'intégrer que celles qui lui sont utiles ou les mieux adaptées (de nombreuses fonctionnalités sont concurrentes) : c'est l'étape de configuration du noyau.
+
+L'étape la plus importante de la compilation d'un noyau personnalisée est la configuration du noyau. Les options de configuration sont déclarées dans le fichier *.config*, chacun correspond à une fonctionnalité du noyau, qu'on décide d'utiliser ou non. Trois choix sont généralement possibles :
+- Y : la fonctionnalité est compilée et implantée dans l'image du noyau
+- M : la fonctionnalité est compilée comme module
+- N : la fonctionnalité est ignorée
+
+Certaines options consistent en un choix binaire : la fonctionnalité est incluse dans l'image noyau ou n'est pas compilée.
+
+Il existe plusieurs outils pour régler la configuration :
+
+- make config : programme en mode texte qui énumère toutes les options et demande d'entrer son choix
+- make menuconfig : utilitaire en mode texte écrit avec ncurses, il permet une navigation plus aisée dans la configuration
+- make gconfig : outil graphique basé sur GTK+
+- make xconfig : outil graphique basé sur Qt
+- make defconfig : outil permettant de récupérer les paramètres de configuration par défaut du noyau. Ces paramètres sont donnés par les développeurs du noyau à chaque nouvelle sortie du noyau.
+- make oldconfig : outil permettant de récupérer les paramètres de configuration d'une ancienne version du noyau afin de ne pas recommencer la configuration à zéro.
+- make olddefconfig : outil permettant de récupérer les paramètres de configuration par défaut du noyau et de mettre les autres paramètres par défaut.
+- make localmodconfig : outil permettant de récupérer les paramètres de configuration du noyau tournant actuellement sur la machine afin de ne charger que les modules nécessaires.
+
+
+Fabriquer les binaires du kernel dépend de l'architecture cible.
+Si le code est compilé sur l'architecture cible alors il n'y a pas besoin de faire de cross compilation.
+Sinon il faut penser à adapter le make avec le compilateur adéquat à la cible.
+
+### Construire le kernel sur l'architecture cible
+Pour accélérer la compilation mettre le nombre de coeur maximum que possède le processeur :
+```
+make -j$(nproc)
+```
 
 ## Arborescence
 
-- bin : contient des programmes (exécutables) susceptibles d'être utilisés par tous les utilisateurs de la machine.
+- bin : contient des programmes (exécutables) susceptibles d'être utilisés par tous les utilisateurs de la machine. (contient les commandes ls,mv,cp etc ...)
 
-- boot : fichiers permettant le démarrage de Linux.
+- boot : pour bootstrap fichiers permettant le démarrage de Linux. Contient le noyau.
 
-dev : fichiers contenant les périphériques. En fait – on en reparlera plus tard – ce dossier contient des sous-dossiers qui « représentent » chacun un périphérique. On y retrouve ainsi par exemple le fichier qui représente le lecteur CD.
+- dev : Pour devices : fichiers contenant les périphériques. Ce dossier contient des sous-dossiers qui « représentent » chacun un périphérique. On y retrouve ainsi par exemple le fichier qui représente le lecteur CD.
 
-- etc : fichiers de configuration.
+- etc : Pour Editable Text Configuration : fichiers de configuration : liste des utilisateurs locaux, configuration du serveur web , la config de démarrage etc... 
 
 - home : répertoires personnels des utilisateurs. On en a déjà parlé un peu avant : c'est dans ce dossier que vous placerez vos fichiers personnels, à la manière du dossierMes documentsde Windows.
 
-Chaque utilisateur de l'ordinateur possède son dossier personnel. Par exemple, dans mon cas mon dossier personnel se trouve dans/home/mateo21/. S'il y avait un autre utilisateur (appelons-le Patrick) sur mon ordinateur, il aurait eu droit lui aussi à son propre dossier :/home/patrick/.
+Chaque utilisateur de l'ordinateur possède son dossier personnel. Par exemple, dans mon cas mon dossier personnel se trouve dans/home/kasi/. S'il y avait un autre utilisateur (appelons-le Patrick) sur mon ordinateur, il aurait eu droit lui aussi à son propre dossier :/home/patrick/.
 
-- lib : dossier contenant les bibliothèques partagées (généralement des fichiers.so) utilisées par les programmes. C'est en fait là qu'on trouve l'équivalent des.dllde Windows.
+- lib/lib64 : dossier contenant les bibliothèques partagées (généralement des fichiers.so) utilisées par les programmes essentiel au fonctionnement . C'est en fait là qu'on trouve l'équivalent des.dll de Windows.
 
 - media : lorsqu'un périphérique amovible (comme une carte mémoire SD ou une clé USB) est inséré dans votre ordinateur, Linux vous permet d'y accéder à partir d'un sous-dossier demedia. On parle de montage.
 
-- mnt : c'est un peu pareil quemedia, mais pour un usage plus temporaire.
+- mnt : c'est un peu pareil que media, mais pour un usage plus temporaire.
 
-- opt : répertoire utilisé pour les add-ons de programmes.
+- opt : optionnel : répertoire utilisé pour les add-ons de programmes.
 
-- proc : contient des informations système.
+- proc : pour processus : contient des informations système. Les fichiers qui sont dans ce dossier "n'existe pas" : c'est le noyau qui me présente sous forme de fichier les informations. Son contenue est totalement dynamique.
+La commande ps utilise le contenu de /proc pour sortir les données: les numéros des dossiers correspondent au processus en cours d'utilisation sur la machine (PID)
 
 - root : c'est le dossier personnel de l'utilisateur « root ». Normalement, les dossiers personnels sont placés danshome, mais celui de « root » fait exception. En effet, comme je vous l'ai dit dans le chapitre précédent, « root » est le superutilisateur, le « chef » de la machine en quelque sorte. Il a droit à un espace spécial.
 
-- sbin : contient des programmes système importants.
+- sbin : contient des programmes systèmes importants. 
 
-- tmp : dossier temporaire utilisé par les programmes pour stocker des fichiers.
+- tmp : dossier temporaire utilisé par les programmes pour stocker des fichiers. Usage ponctuelle : car son contenue est supprimé au reboot du système.
 
-- usr : c'est un des plus gros dossiers, dans lequel vont s'installer la plupart des programmes demandés par l'utilisateur.
+- usr : c'est un des plus gros dossiers, dans lequel vont s'installer la plupart des programmes demandés par l'utilisateur et bibliothèques non essentiels.
 
-- var : ce dossier contient des données « variables », souvent des logs (traces écrites de ce qui s'est passé récemment sur l'ordinateur).
+- var : ce dossier contient des données « variables », souvent des logs (traces écrites de ce qui s'est passé récemment sur l'ordinateur). Contient les fichiers qui évoluent lors du fonctionnement de la machine. (Base de donnée/Serveur web etc ...)
+
+### /boot
+
+C'est le dossier système lié au démarrage de l'OS.
+Il stocke :
+
+- Les fichiers de configuration de grub dans /boot/grub/grub.cfg
+- Les fichiers images du kernel Linux (noyau Linux)
+- initrd (INITial RamDisk) - il contient les pilotes minimaux pour accéder au disque dur durant le démarrage du PC
+- System.map : tableau de symbôle du noyau avec les adresses mémoires
+- vmlinux : c'est le fichier du noyau Linux.
+
+### /etc
+Il stocke les fichiers de configurations du système ainsi que des applications.
+Ainsi, on trouve un sous-dossier par application.
+Parmi les sous-dossiers /etc importants :
+
+- /etc/init.d et /etc/default : les fichiers liés aux daemons Linux
+- /etc/password, /etc/group, /etc/shadow : les fichiers de configuration des utilisateurs Linux.
+- /etc/hosts : le fichier HOSTS de Linux
+- /etc/network : dossier de configuration réseau. L'emplacement peut varier selon la distribution.
+- /etc/pam.conf et /etc/pam.d : la configuration des services d'authentification à travers Linux Pluggable Authentication Modules (PAM).
+- /etc/sudoers et /etc/sudoers.d : la configuration de sudo.
+- /etc/sysctl.conf et /etc/sysctl.d les fichiers de configuration de démarrage du noyau Linux.
+- /etc/resolv.conf : la configuration des DNS Linux.
+
+C'est un dossier système Linux très important pour le fonctionnement général du système d'exploitation.
+Certains fichiers de configuration sont aussi liés à la configuration.
+Ainsi, les utilisateurs ne doivent pas pouvoir écrire ou lire ces fichiers car ils peuvent modifier la configuration Linux.
+
+### /dev
+/dev
+Le répertoire système /dev stocke les fichiers des périphériques à travers udev.
+udev est un gestionnaire de périphériques de Linux.
+Ce dernier monte de manière dynamique les périphériques utilisés sur le PC.
+Mais on peut créer des règles pour imposer des configurations.
+Par exemple, l'ordre des interfaces si vous avez plusieurs cartes réseaux (eth0, eth1).
+Ou encore même chose sur l'ordre des disques et leurs numérotations.
+
+### /proc
+
+C'est un pseudo-système de fichiers basé sur procfs (process file system).
+Il stocke des données du noyau que les applications peuvent utilisés.
+On peut aussi y trouver des fichiers de configurations que l'on peut modifier directement.
+Mais pour une persistance au démarrage, il faut modifier les fichier /etcsysctl.conf et /etc/sysctl.d ou utiliser la commande sysctl.
+
+- /proc/cpuinfo : les informations CPU. Par exemple la commande lshw peut utiliser pour donner la configuration CPU.
+- /proc/meminfo : stocke les informations sur mémoire libre, utilisés, etc. Les commandes top, freemem peuvent utiliser ce fichier.
+- /proc/net : les données liées à l'utilisation réseau par protocole. Les commandes ifconfig, iftop peuvent s'en servir.
+- /proc/diskstats et /proc/partitions : l'état des disques et partitions de disque.
+- /proc/swaps : stocke les partitions SWAP.
+- /proc/PID/ : les PID des applications ouvertures utilisés par exemple par top ou ps.
+
+Enfin les paramètres du noyau se trouve dans /proc/sys/
+Par exemple /proc/sys/net stocke la configuration réseau du noyau.
+Souvent il s'agit de fichier avec des valeurs parfois de type boolean 0 ou 1.
+Ainsi par exemple pour activer le routage entre les interfaces réseaux, on peut utiliser la commande :
+```
+echo 1 >/proc/sys/net/ipv4/ip_forward
+```
+
+Mais la configuration n'est pas persistante au redémarrage.
+
+### /usr
+
+Le répertoire système /usr stocke les données des applications des utilisateurs.
+C'est donc en général des applications supplémentaires installées à partir du système de package de la distribution ou compilées.
+
+On y trouve alors les sous-dossiers suivants :
+
+- /usr/bin : stocke les exécutables et binaires des applications
+- /usr/lib : le dossier des librairies utilisées par les applications
+- /usr/local : les applications compilées. On retrouve alors la même structure de répertoire.
+- /usr/share : le dossier avec les fichiers qui peuvent être partagés à toutes les architectures (i386, amd64, etc).
+- /usr/src : les sources des applications que l'on peut compiler
+
+### /var
+
+Ce dossier système stocke des données variables.
+Voici les principaux sous-répertoire de /var
+
+- /var/log : les journaux et logs du système et des applications
+- /var/lock : Les fichiers LCK. de verrous pour les ressources, périphériques partagés
+- /var/run : Des fichiers liés aux applications en cours de fonctionnement. Par exemple, on peut y trouver le PID de l'application.
+- /var/mail : les mails des utilisateurs
+- /var/cache : dossiers et fichiers de cache. Par exemple apt peut y stocker les packages pour installer ou mettre à jour le système et les applications. On trouve aussi les documents et man des applications dans /var/cache/man.
 
 ## Raccourci Clavier
 
-- Ctrl + L : efface le contenu de la console. Utile pour faire un peu de ménage quand votre console est encombrée, ou quand votre boss passe derrière vous et que vous n'aimeriez pas qu'il voie ce que vous étiez en train de faire.
+- Ctrl + L : Efface le contenu de la console. Utile pour faire un peu de ménage quand votre console est encombrée, ou quand votre boss passe derrière vous et que vous n'aimeriez pas qu'il voie ce que vous étiez en train de faire.
 
 À noter qu'il existe aussi une commande, clear, qui fait exactement la même chose.
 
@@ -139,7 +275,9 @@ On peut exécuter plusieurs commandes d'affilée en les séparant par des points
 
 ## Tricks Linux
 
-Utiliser un nano intelligent (souris et indentation automatique) : nano -miA source.txt
+Utiliser un nano intelligent (souris et indentation automatique) : 
+
+nano -miA source.txt
 Créer un alias : nano ~/.bashrc
 Mettreleclavierenfr : setxkbmap fr
 
@@ -167,6 +305,9 @@ sudo apt install -y nvidia-driver nvidia-cuda-toolkit
 
 Exemples : Recherche le mot categories et les scripts nse correspondant dans le repertoire : /usr/share/nmap/scripts/
 grep -r categories /usr/share/nmap/scripts/*.nse
+
+# Références
+- https://tldp.org/LDP/lkmpg/2.6/lkmpg.pdf
 
 Enumération dyn. du rep. Desktop : watch -n 2 ls /home/kasi/Desktop/
 
