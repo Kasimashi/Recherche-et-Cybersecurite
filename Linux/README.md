@@ -13,10 +13,12 @@ L'arborescence linux peut parfois être difficile à appréhender mais elle est 
 
 ## Le Noyau Linux
 
+Disponible à l'addresse : https://github.com/torvalds/linux
+
 ### Le rôle du noyau
 Le noyau sert d'abord à contrôler les différents composants matériels, les recenser, les mettre en marche lors de l'initialisation de l'ordinateur, etc.
-
 Le Noyau permet en partie de faire le lien entre le matériel et la machine par l'intermédiaire de drivers.
+Le noyau est le coeur du système, il gère la RAM, le framebuffer pour des écritures sur les disques dur. Il gère les entrées/sorties puis les processus et le système de fichiers
 
 ### Compilation du noyau
 
@@ -46,10 +48,20 @@ Si le code est compilé sur l'architecture cible alors il n'y a pas besoin de fa
 Sinon il faut penser à adapter le make avec le compilateur adéquat à la cible.
 
 ### Construire le kernel sur l'architecture cible
+Pour commencer il faut copier la config de la carte cible pour ce fait, on récupère la config qui est disponible dans le boot:
+```
+cp /boot/config-$(uname -r) .config
+```
+
 Pour accélérer la compilation mettre le nombre de coeur maximum que possède le processeur :
 ```
 make -j$(nproc)
+make install -j$(nproc)
+make modules_install -j$(nproc)
 ```
+Permettent respectivement d'installer l'image du noyau et ses modules.
+
+Pour permettre l'amorçage du système avec la nouvelle image de noyau, il est nécessaire de configurer le chargeur de démarrage (LILO, GRUB) pour qu'il exécute l'image du noyau au démarrage. Avec (GRUB, GRUB2) la commande ```update-grub``` automatise la configuration.
 
 ## Arborescence
 
